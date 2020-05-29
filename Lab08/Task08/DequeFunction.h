@@ -14,6 +14,7 @@ void DeleteEnd(Deque *deque); //Удалить последний элемент
 void AddStart(Deque *deque, int value); // Добавить элемент в начало
 void AddEnd(Deque *deque, int value); // Добавить элемент в конец
 void WriteToFile(Deque *deque); // Запись дэка в файл
-void ReadFromFile(Deque *deque); // Чтение дэка из файла
+char* ReadFromFile(); // Чтение дэка из файла
 
-void InputElements(Deque *deque); // Добавление элементов в дэк
+Deque* stringToDeque(char* str_deque); // String deque in struct Deque
+void fillBuffer(Deque* deque); // Add elements in buffer deque

@@ -23,39 +23,6 @@ LPCWSTR bufferLPCWSTR;
 char bufferDequeStr[250];
 
 
-DWORD WINAPI inputStartElements(LPVOID ptr)
-{
-	HANDLE thrdSub = NULL;
-	Deque* deque = (Deque*)ptr;
-
-	while (true)
-	{
-		WaitForSingleObject(deque->hEventBufferFull, INFINITE);
-
-		// Добавление элемента в дэк
-		AddEnd(deque, deque->buffer);
-		deque->length++;
-
-		thrdSub = GetCurrentThread();
-		std::cout << "Поток: " << GetThreadId(thrdSub) << std::endl;
-		std::cout << "Добавлен элемент в дэк: " << deque->buffer << std::endl;
-		std::cout << "Дэк:";
-		OutputAll(deque);
-		std::cout << "Запись дэка в файл" << std::endl;
-		WriteToFile(deque);
-		std::cout << "Запись дэка в файл прошла успешно" << std::endl;
-		std::cout << "Чтение дэка из файл" << std::endl;
-		ReadFromFile(deque);
-		std::cout << "Дэк успешно прочитан из файла. Результат: ";
-		OutputAll(deque);
-		std::cout << "***********************************************" << std::endl;
-		ResetEvent(deque->hEventBufferFull);
-		SetEvent(deque->hEventBufferEmpty);
-	}
-
-	return 0;
-}
-
 int SizeDeque(Deque * deque)
 {
 	return deque->length;
@@ -109,35 +76,40 @@ void AddEnd(Deque * deque, int value)
 void WriteToFile(Deque * deque)
 {
 	string strDeque = "";
-
-	for (int n : deque->deque)
+	for (DWORD i = 0; i < deque->bufferSize; i++)
 	{
-		strDeque += to_string(n);
+		strDeque += to_string(deque->buffer[i]);
 		strDeque += ";";
 	}
 
 	LPCSTR LPCStrDeque = strDeque.c_str();
 	HANDLE hFile;
 
-	hFile = CreateFile(L"DequeFile.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	hFile = CreateFile(L"DequeFile.txt", GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	WriteFile(hFile, LPCStrDeque, strlen(LPCStrDeque), &bufferDWORD, NULL);
 	CloseHandle(hFile);
 }
 
-void ReadFromFile(Deque * deque)
+char* ReadFromFile()
 {
-	deque->deque.resize(0); // Задаём 0 длину
-	deque->length = 0; // Храним длину равную 0
-
 	HANDLE hFile;
 
 	hFile = CreateFile(L"DequeFile.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	ReadFile(hFile, bufferDequeStr, 250, &bufferDWORD, NULL);
 	CloseHandle(hFile);
 
+	return bufferDequeStr;
+}
+
+Deque * stringToDeque(char * strDeque)
+{
+	Deque* deque = new Deque;
+	deque->deque.resize(0); // Задаём 0 длину
+	deque->length = 0; // Храним длину равную 0
+
 	char *ptr;
 
-	if ((ptr = strtok(bufferDequeStr, ";")) != nullptr)
+	if ((ptr = strtok(strDeque, ";")) != nullptr)
 	{
 		AddEnd(deque, atoi(ptr));
 		ptr = strtok(0, ";");
@@ -148,25 +120,24 @@ void ReadFromFile(Deque * deque)
 
 		}
 	}
+
+	return deque;
 }
 
-void InputElements(Deque *deque)
+void fillBuffer(Deque * deque)
 {
 	DWORD n;
-	HANDLE thrdMain = NULL;
-	std::cout << "Введите количество элементов дэка: ";
+	std::cout << "Введите количество элементов деки: ";
 	std::cin >> n;
 	std::cout << "***********************************************" << std::endl;
 	for (DWORD i = 0; i < n; i++)
 	{
-		WaitForSingleObject(deque->hEventBufferEmpty, INFINITE);
 		INT num = rand() % 100;
-		deque->buffer = num;
-		thrdMain = GetCurrentThread();
-
-		std::cout << "Поток: " << GetThreadId(thrdMain) << std::endl;
-		std::cout << "Элемент для записи в дэк: " << num << std::endl;
+		deque->buffer[i] = num;
+		deque->bufferSize++;
+		std::cout << "Процесс: " << GetCurrentProcessId() << std::endl;
+		std::cout << "Элемент добавлен в буффер: " << num << std::endl;
 		std::cout << "***********************************************" << std::endl;
-		SetEvent(deque->hEventBufferFull);
 	}
+	WriteToFile(deque);
 }

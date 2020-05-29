@@ -17,14 +17,27 @@ using namespace std;
 
 int main()
 {
+	STARTUPINFO si;
+	PROCESS_INFORMATION pi;
+	ZeroMemory(&si, sizeof(STARTUPINFO));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
+
 	// Установка кириллицы
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
+	setlocale(LC_ALL, "Russian");
+	Deque* deque = new Deque;
 
-	Deque* dq = new Deque;
+	fillBuffer(deque);
 
-	InputElements(dq);
-	WaitForSingleObject(dq->hEventBufferEmpty, INFINITE);
-	std::cout << "Тест закончен" << std::endl;
+	CreateProcess(L"AddElements.exe", NULL, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi);
+	WaitForSingleObject(pi.hProcess, INFINITE);
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+	std::cout << "\n\n\n" << std::endl;
+	char* strDeque = ReadFromFile();
+	deque = stringToDeque(strDeque);
+	std::cout << "Дека: " << std::endl;
+	OutputAll(deque);
+	std::cout << "Тесты завершены" << std::endl;
 	system("pause");
 }

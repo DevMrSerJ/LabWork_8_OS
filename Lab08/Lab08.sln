@@ -5,6 +5,19 @@ VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Task08", "Task08\Task08.vcxproj", "{C2423969-30EC-473E-9969-A6140E6EBF78}"
 EndProject
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "AddElements", "Task08\AddElements.exe", "{4066410A-B8D2-4980-8E2E-DADBAC553DD9}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Users\ivano\OneDrive\Документы\Labs\OS Labs\LabWork_8_OS\Lab08\Task08\AddElements.exe
+		RemoteMachine = DESKTOP-DVT93MP
+		StartingDirectory = C:\Users\ivano\OneDrive\Документы\Labs\OS Labs\LabWork_8_OS\Lab08\Task08
+		Environment = По умолчанию
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +34,10 @@ Global
 		{C2423969-30EC-473E-9969-A6140E6EBF78}.Release|x64.Build.0 = Release|x64
 		{C2423969-30EC-473E-9969-A6140E6EBF78}.Release|x86.ActiveCfg = Release|Win32
 		{C2423969-30EC-473E-9969-A6140E6EBF78}.Release|x86.Build.0 = Release|Win32
+		{4066410A-B8D2-4980-8E2E-DADBAC553DD9}.Debug|x64.ActiveCfg = Release|x86
+		{4066410A-B8D2-4980-8E2E-DADBAC553DD9}.Debug|x86.ActiveCfg = Release|x86
+		{4066410A-B8D2-4980-8E2E-DADBAC553DD9}.Release|x64.ActiveCfg = Release|x86
+		{4066410A-B8D2-4980-8E2E-DADBAC553DD9}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

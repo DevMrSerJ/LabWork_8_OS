@@ -16,9 +16,8 @@ Deque::Deque()
 	length = 0; // Храним длину равную 0
 
 	hHeap = HeapCreate(0, 2 * sizeof(INT*), 0);
-	hThread = CreateThread(NULL, 0, inputStartElements, this, 0, &dwThreadId);
-	hEventBufferEmpty = CreateEvent(NULL, FALSE, TRUE, NULL);
-	hEventBufferFull = CreateEvent(NULL, FALSE, FALSE, NULL);
+	buffer = new int[40];
+	bufferSize = 0;
 }
 
 Deque::~Deque()
