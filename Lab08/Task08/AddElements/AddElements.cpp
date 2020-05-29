@@ -19,10 +19,6 @@ int main(int argc, TCHAR* argv[])
 	setlocale(LC_ALL, "Russian");
 	char* strDeque = ReadFromFile();
 	Deque* deque = stringToDeque(strDeque);
-	//Deque* deque = NULL;
-	//WriteToFile(deque);
-	//char* str_deque = load_file(L"test.txt");
-	//deque* _deque = string_to_deque(str_deque);
 	fillFromBuffer(deque);
 	std::cout << "Дочерний процесс завершил свою работу" << std::endl;
 	system("pause");

@@ -23,39 +23,6 @@ LPCWSTR bufferLPCWSTR;
 char bufferDequeStr[250];
 
 
-/*DWORD WINAPI inputStartElements(LPVOID ptr)
-{
-	HANDLE thrdSub = NULL;
-	Deque* deque = (Deque*)ptr;
-
-	while (true)
-	{
-		WaitForSingleObject(deque->hEventBufferFull, INFINITE);
-
-		// Добавление элемента в дэк
-		AddEnd(deque, deque->buffer);
-		deque->length++;
-
-		thrdSub = GetCurrentThread();
-		std::cout << "Поток: " << GetThreadId(thrdSub) << std::endl;
-		std::cout << "Добавлен элемент в дэк: " << deque->buffer << std::endl;
-		std::cout << "Дэк:";
-		OutputAll(deque);
-		std::cout << "Запись дэка в файл" << std::endl;
-		WriteToFile(deque);
-		std::cout << "Запись дэка в файл прошла успешно" << std::endl;
-		std::cout << "Чтение дэка из файл" << std::endl;
-		ReadFromFile(deque);
-		std::cout << "Дэк успешно прочитан из файла. Результат: ";
-		OutputAll(deque);
-		std::cout << "***********************************************" << std::endl;
-		ResetEvent(deque->hEventBufferFull);
-		SetEvent(deque->hEventBufferEmpty);
-	}
-
-	return 0;
-}*/
-
 int SizeDeque(Deque * deque)
 {
 	return deque->length;
@@ -114,12 +81,6 @@ void WriteToFile(Deque * deque)
 		strDeque += to_string(deque->buffer[i]);
 		strDeque += ";";
 	}
-	/*res += "*$";
-	for (int n : deque->deque)
-	{
-		strDeque += to_string(n);
-		strDeque += ";";
-	}*/
 
 	LPCSTR LPCStrDeque = strDeque.c_str();
 	HANDLE hFile;
@@ -131,9 +92,6 @@ void WriteToFile(Deque * deque)
 
 char* ReadFromFile()
 {
-	//deque->deque.resize(0); // Задаём 0 длину
-	//deque->length = 0; // Храним длину равную 0
-
 	HANDLE hFile;
 
 	hFile = CreateFile(L"C:\\Users\\ivano\\OneDrive\\Документы\\Labs\\OS Labs\\LabWork_8_OS\\Lab08\\Task08\\DequeFile.txt", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -141,42 +99,21 @@ char* ReadFromFile()
 	CloseHandle(hFile);
 
 	return bufferDequeStr;
-
-	//char *ptr;
-
-	/*if ((ptr = strtok(bufferDequeStr, ";")) != nullptr)
-	{
-		AddEnd(deque, atoi(ptr));
-		ptr = strtok(0, ";");
-
-		while (ptr) {
-			AddEnd(deque, atoi(ptr));
-			ptr = strtok(0, ";");
-
-		}
-	}*/
 }
 
 Deque * stringToDeque(char * strDeque)
 {
 	Deque* deque = new Deque;
 	std::list<int> buf;
-	//deque->deque.resize(0); // Задаём 0 длину
-	//deque->length = 0; // Храним длину равную 0
-	
 	char *ptr;
 
 	if ((ptr = strtok(strDeque, ";")) != nullptr)
 	{
-		//AddEnd(deque, atoi(ptr));
-		//deque->deque.push_back(value); // Записываем в конец value
-		//deque->length++;
 		buf.push_back(atoi(ptr)); // add element in buffer
 		deque->bufferSize++;
 		ptr = strtok(0, ";");
 
 		while (ptr) {
-			//AddEnd(deque, atoi(ptr));
 			buf.push_back(atoi(ptr)); // add element in buffer
 			deque->bufferSize++;
 			ptr = strtok(0, ";");
@@ -210,8 +147,6 @@ void fillBuffer(Deque * deque)
 		std::cout << "Элемент добавлен в буффер: " << num << std::endl;
 		std::cout << "_______________________________________________" << std::endl;
 	}
-	//std::string str_deque = deque_to_string(_deque);
-	//save_file(L"test.txt", str_deque.c_str());
 	WriteToFile(deque);
 }
 
@@ -224,33 +159,8 @@ void fillFromBuffer(Deque * deque)
 		std::cout << "Элемент добавлен в деку: " << deque->buffer[i] << std::endl;
 		AddEnd(deque, deque->buffer[i]);
 		std::cout << "Дека: " << std::endl;
-		//printDeque(_deque);
 		OutputAll(deque);
 		std::cout << "_______________________________________________" << std::endl;
 	}
-	//std::string strdDeque = deque_to_string(_deque);
-	//save_file(L"test.txt", str_deque.c_str());
 	WriteToFile(deque);
 }
-
-/*void InputElements(Deque *deque)
-{
-	DWORD n;
-	HANDLE thrdMain = NULL;
-	std::cout << "Введите количество элементов дэка: ";
-	std::cin >> n;
-	std::cout << "***********************************************" << std::endl;
-	for (DWORD i = 0; i < n; i++)
-	{
-		WaitForSingleObject(deque->hEventBufferEmpty, INFINITE);
-		INT num = rand() % 100;
-		deque->buffer = num;
-		thrdMain = GetCurrentThread();
-
-		std::cout << "Поток: " << GetThreadId(thrdMain) << std::endl;
-		std::cout << "Элемент для записи в дэк: " << num << std::endl;
-		std::cout << "***********************************************" << std::endl;
-		SetEvent(deque->hEventBufferFull);
-	}
-}*/
-
